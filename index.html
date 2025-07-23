@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打工人时钟</title>
+    <!-- 引入 Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            font-family: 'Noto Sans SC', 'Roboto', sans-serif;
+            color: white;
+            text-align: center;
+        }
+
+        .clock-container {
+            background-color: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px 60px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        #clock {
+            font-size: 5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+        }
+
+        #encouragement {
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-top: 20px;
+            min-height: 3rem; /* 确保语句高度一致，避免跳动 */
+            opacity: 0.9;
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+<div class="clock-container">
+    <h1>打工人时钟</h1>
+    <div id="clock">--:--:--</div>
+    <div id="encouragement">加载中...</div>
+</div>
+
+<script>
+    // 预设的20条鼓励语句
+    const encouragements = [
+        "加油，打工人！",
+        "今天的努力，是明天的收获。",
+        "每一份坚持，都值得被肯定。",
+        "你比想象中更强大！",
+        "努力工作，快乐生活。",
+        "今天的你，比昨天更棒！",
+        "保持热爱，奔赴山海。",
+        "你的潜力，超乎想象。",
+        "累了就休息一下，然后继续加油！",
+        "星光不问赶路人，时光不负有心人。",
+        "每一步都算数，每一天都精彩。",
+        "相信自己，你可以的！",
+        "成功，就是简单的事情不断地重复做。",
+        "你的努力，终将成就更好的自己。",
+        "工作很苦，但你很酷。",
+        "没有白走的路，每一步都算数。",
+        "今天的奋斗，是为了更好的明天。",
+        "你流的每一滴汗，都不会白流。",
+        "乾坤未定，你我皆是黑马。",
+        "心若向阳，何惧忧伤。"
+    ];
+
+    // 获取DOM元素
+    const clockElement = document.getElementById('clock');
+    const encouragementElement = document.getElementById('encouragement');
+
+    // 更新时钟函数
+    function updateClock() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('zh-CN', { hour12: false });
+        clockElement.textContent = timeString;
+    }
+
+    // 获取随机鼓励语句函数
+    function getRandomEncouragement() {
+        const randomIndex = Math.floor(Math.random() * encouragements.length);
+        return encouragements[randomIndex];
+    }
+
+    // 更新鼓励语句
+    function updateEncouragement() {
+        encouragementElement.textContent = getRandomEncouragement();
+    }
+
+    // 初始化
+    updateClock();
+    updateEncouragement();
+
+    // 每秒更新时钟
+    setInterval(updateClock, 1000);
+
+    // 每30秒更新一次鼓励语句 (30000毫秒)
+    setInterval(updateEncouragement, 30000);
+
+</script>
+
+</body>
+</html>
