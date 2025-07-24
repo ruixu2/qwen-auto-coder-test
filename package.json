@@ -1,0 +1,14 @@
+{
+  "name": "electron-red-dot",
+  "version": "1.0.0",
+  "description": "一个在屏幕中心显示红点的Electron应用",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^28.0.0"
+  }
+}

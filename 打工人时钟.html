@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>打工人时钟</title>
+    <!-- 引入 Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Noto+Sans+SC:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            font-family: 'Noto Sans SC', 'Roboto', sans-serif;
+            color: white;
+            text-align: center;
+        }
+
+        .clock-container {
+            background-color: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px 60px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 400px; /* 固定宽度以保持外边框大小不变 */
+            height: 350px; /* 固定高度以保持外边框大小不变 */
+            display: flex;
+            flex-direction: column;
+        }
+
+        #clock {
+            font-size: 5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 2px;
+        }
+
+        .encouragement-container {
+            display: flex;
+            align-items: flex-start; /* 改为顶部对齐，便于文本换行 */
+            justify-content: center;
+            margin-top: 20px;
+            flex-wrap: nowrap; /* 保持容器不换行 */
+            height: 100px; /* 固定高度 */
+        }
+
+        #encouragement {
+            font-size: 1.5rem;
+            font-weight: 400;
+            height: 100px; /* 固定高度 */
+            opacity: 0.9;
+            margin-right: 10px;
+            flex: 1; /* 占用剩余空间 */
+            overflow-y: auto; /* 内容过多时显示滚动条 */
+            text-align: left; /* 文本左对齐，便于阅读 */
+            line-height: 1.5; /* 增加行高，提高可读性 */
+            padding: 5px; /* 添加内边距 */
+            box-sizing: border-box; /* 确保内边距不会增加元素总大小 */
+        }
+
+        #refresh-btn {
+            background-color: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            flex-shrink: 0; /* 防止按钮被压缩 */
+            align-self: flex-start; /* 与文本顶部对齐 */
+            margin-top: 5px; /* 微调按钮位置 */
+        }
+
+        #refresh-btn:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: rotate(180deg);
+        }
+
+        h1 {
+            margin-top: 0;
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+    </style>
+</head>
+<body>
+
+<div class="clock-container">
+    <h1>打工人时钟</h1>
+    <div id="clock">--:--:--</div>
+    <div class="encouragement-container">
+        <div id="encouragement">加载中...</div>
+        <button id="refresh-btn" title="刷新鼓励语句">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M23 4v6h-6"/>
+                <path d="M1 20v-6h6"/>
+                <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/>
+            </svg>
+        </button>
+    </div>
+</div>
+
+<script>
+    // 预设的50条鼓励语句
+    const encouragements = [
+        "加油，打工人！",
+        "今天的努力，是明天的收获。",
+        "每一份坚持，都值得被肯定。",
+        "你比想象中更强大！",
+        "努力工作，快乐生活。",
+        "今天的你，比昨天更棒！",
+        "保持热爱，奔赴山海。",
+        "你的潜力，超乎想象。",
+        "累了就休息一下，然后继续加油！",
+        "星光不问赶路人，时光不负有心人。",
+        "每一步都算数，每一天都精彩。",
+        "相信自己，你可以的！",
+        "成功，就是简单的事情不断地重复做。",
+        "你的努力，终将成就更好的自己。",
+        "工作很苦，但你很酷。",
+        "没有白走的路，每一步都算数。",
+        "今天的奋斗，是为了更好的明天。",
+        "你流的每一滴汗，都不会白流。",
+        "乾坤未定，你我皆是黑马。",
+        "心若向阳，何惧忧伤。",
+        "不经一番寒彻骨，怎得梅花扑鼻香。",
+        "山高路远，但见前程似锦。",
+        "风雨之后，必见彩虹。",
+        "坚持下去，你就是自己的光。",
+        "每天进步一点点，成功就会离你更近一点。",
+        "不要让今天的懈怠，成为明天的遗憾。",
+        "做最好的自己，成为更好的人。",
+        "生活不会辜负每一份努力和坚持。",
+        "别忘了休息，但不要放弃。",
+        "你的坚持，终将美好。",
+        "不经历风雨，怎能见彩虹。",
+        "人生没有白走的路，每一步都算数。",
+        "越努力，越幸运。",
+        "生活明朗，万物可爱，人间值得。",
+        "愿你所有的努力都不被辜负。",
+        "不要因为一次失败，而放弃整个未来。",
+        "坚持做自己，成为独特的风景。",
+        "每一次尝试，都是成长。",
+        "不要让昨天的失败，成为今天的借口。",
+        "你的努力，终将绽放光芒。",
+        "生活不会一直完美，但可以一直向上。",
+        "不要轻易放弃，坚持下去就会有奇迹。",
+        "相信自己，你比想象中更坚强。",
+        "每一个清晨，都是新的开始。",
+        "不要害怕失败，它是成功的垫脚石。",
+        "坚持自己的梦想，不管别人怎么说。",
+        "生活中没有白费的努力，也没有碰巧的成功。",
+        "不要停止奔跑，不要回顾来路，来路无可眷恋，值得期待的只有前方。",
+        "人生就像爬山，看起来走了弯路，其实是在盘旋向上。",
+        "愿你在被打击时，记起你的珍贵，抵抗恶意；愿你在迷茫时，坚信你的珍贵。"
+    ];
+
+    // 获取DOM元素
+    const clockElement = document.getElementById('clock');
+    const encouragementElement = document.getElementById('encouragement');
+
+    // 更新时钟函数
+    function updateClock() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('zh-CN', { hour12: false });
+        clockElement.textContent = timeString;
+    }
+
+    // 获取随机鼓励语句函数
+    function getRandomEncouragement() {
+        const randomIndex = Math.floor(Math.random() * encouragements.length);
+        return encouragements[randomIndex];
+    }
+
+    // 更新鼓励语句
+    function updateEncouragement() {
+        encouragementElement.textContent = getRandomEncouragement();
+    }
+
+    // 初始化
+    updateClock();
+    updateEncouragement();
+
+    // 每秒更新时钟
+    setInterval(updateClock, 1000);
+
+    // 每30秒更新一次鼓励语句 (30000毫秒)
+    setInterval(updateEncouragement, 30000);
+    
+    // 添加刷新按钮点击事件
+    document.getElementById('refresh-btn').addEventListener('click', function() {
+        updateEncouragement();
+        // 添加按钮点击动画效果
+        this.classList.add('clicked');
+        setTimeout(() => {
+            this.classList.remove('clicked');
+        }, 300);
+    });
+
+
+</script>
+
+</body>
+</html>
